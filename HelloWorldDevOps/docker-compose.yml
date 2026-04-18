@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  hello-world-app:
+    # 1. Naming: Makes it easier to identify in 'docker ps'
+    container_name: hello-world-web
+    
+    # 2. Build configuration
+    image: hello-world-devops
+
+
+    # 3. Port Mapping: Host:Container
+    ports:
+      - "8081:8080"
+
+    # 4. Environment Variables
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+
+    # 5. Reliability: Automatically restart unless you stop it manually
+    restart: unless-stopped
+    
+    # 6. Networks: Groups your services. Easy to add a DB later.
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
