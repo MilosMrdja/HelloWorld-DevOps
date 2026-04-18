@@ -73,7 +73,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           # Use your folder name for context
-          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/hello-world-app
+          IMAGE_NAME=ghcr.io/milosmrdja/hello-world-app
           TAG=${{ github.ref_name }}
           docker build -t $IMAGE_NAME:$TAG ./HelloWorldDevOps
           docker push $IMAGE_NAME:$TAG
