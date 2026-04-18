@@ -1,0 +1,47 @@
+name: CI/CD Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  # JOB 1: Build and Test
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Build and Test with Maven
+        run: mvn clean verify
+
+  # JOB 2: Secret Scanning (TruffleHog)
+  security-secrets:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: TruffleHog OSS
+        uses: trufflesecurity/trufflehog@main
+        with:
+          base: ""
+          head: HEAD
+          extraArgs: --debug --only-verified
+
+  # JOB 3: Vulnerability Scanning (Trivy)
+  security-container:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker Image
+        run: docker build -t hello-world-app:latest .
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'hello-world-app:latest'
+          format: 'table'
+          exit-code: '1' # Fails the pipeline if vulnerabilities are found
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
