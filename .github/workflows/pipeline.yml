@@ -75,5 +75,5 @@ jobs:
           # Use your folder name for context
           IMAGE_NAME=ghcr.io/milosmrdja/hello-world-app
           TAG=${{ github.ref_name }}
-          docker build -t $IMAGE_NAME:$TAG ./HelloWorldDevOps
+          docker build -t $IMAGE_NAME:$TAG .
           docker push $IMAGE_NAME:$TAG
