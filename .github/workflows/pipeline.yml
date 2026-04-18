@@ -2,10 +2,15 @@ name: CI/CD Pipeline
 
 on: [push, pull_request]
 
+defaults:
+    run:
+      working-directory: HelloWorldDevOps
+
 jobs:
   # JOB 1: Build and Test
   build-and-test:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 21
